@@ -1,6 +1,6 @@
 # cv-frontend
 
-**CV** — deployed at [cv.1ms.my](https://cv.1ms.my/).
+**CV** —  deployed at [cv.1ms.my](https://cv.1ms.my/).
 
 Static site for the 1ms.my platform.
 
