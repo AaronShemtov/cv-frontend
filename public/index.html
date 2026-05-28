@@ -12,6 +12,149 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/blueprint.css" />
+<!-- Favicon — the 1ms speedometer logo, shared across all sites. -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<style>
+  /* Inline page-specific extensions — kept here rather than in shared
+     blueprint.css so a navigation/aside tweak doesn't require shipping
+     all four sites together. */
+
+  /* Ribbon subtitle and external indicator — same idiom as infra.1ms.my. */
+  .ribbon-nav a > span:first-child { display: block; line-height: 1.1; }
+  .ribbon-sub {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    margin-top: 1px;
+  }
+  .ribbon-ext {
+    margin-left: 4px;
+    color: var(--mute);
+    font-size: 11px;
+    vertical-align: baseline;
+  }
+  .ribbon-nav a:hover .ribbon-ext,
+  .ribbon-nav a:hover .ribbon-sub { color: var(--accent); }
+
+  /* Footer link list — mirrored from infra so we can reuse the styling. */
+  .foot-nav {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .foot-nav a {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--mute);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+  .foot-nav a:hover,
+  .foot-nav a:hover .ribbon-ext,
+  .foot-nav a:hover .ribbon-sub { color: var(--accent); }
+  .foot-nav a > span:first-child { display: block; line-height: 1.1; }
+
+  /* Cloud experience aside — same visual language as the platform-spec
+     card on infra.1ms.my (grid-paper background, corner brackets, live
+     mark) but with prose sections instead of key/value rows.
+     Sits sticky on desktop alongside the hero/title block. */
+  .cloud-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 22px 18px;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .cloud-card::before, .cloud-card::after {
+    content: ""; position: absolute; width: 14px; height: 14px;
+    border-color: var(--accent); border-style: solid; border-width: 0;
+  }
+  .cloud-card::before { top: -1px; left: -1px; border-top-width: 1.5px; border-left-width: 1.5px; }
+  .cloud-card::after  { bottom: -1px; right: -1px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+  .cloud-card > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .cloud-card > header .title-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--mute);
+    text-transform: uppercase;
+  }
+  .cloud-card .live-mark {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--live);
+    text-transform: uppercase;
+    padding-left: 12px;
+    position: relative;
+  }
+  .cloud-card .live-mark::before {
+    content: "";
+    position: absolute; left: 0; top: 50%;
+    width: 6px; height: 6px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--live) 30%, transparent);
+  }
+
+  .cloud-section { margin-bottom: 14px; }
+  .cloud-section:last-child { margin-bottom: 0; }
+  .cloud-section h4 {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cloud-section h4 .live-mark-sm {
+    font-size: 8.5px;
+    padding: 2px 6px;
+    border: 1px solid var(--live);
+    border-radius: 3px;
+    line-height: 1;
+    padding-left: 14px;
+  }
+  .cloud-section h4 .live-mark-sm::before {
+    left: 5px;
+    width: 5px;
+    height: 5px;
+  }
+  .cloud-section p {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  /* Stack hero-grid on narrow screens so the aside falls under the
+     title block instead of crowding it. */
+  @media (max-width: 960px) {
+    .cloud-card { margin-top: 24px; }
+  }
+</style>
 </head>
 <body>
 
@@ -22,10 +165,11 @@
     </div>
     <div style="display:flex; align-items:center; gap:18px;">
       <nav class="ribbon-nav">
-        <a href="https://1ms.my/">1ms.my</a>
+        <a href="https://1ms.my/"><span>1ms.my</span><span class="ribbon-sub">link shortener</span></a>
         <a href="https://cv.1ms.my/" class="current">cv</a>
         <a href="https://infra.1ms.my/">platform</a>
-        <a href="https://pwd.1ms.my/">pwd</a>
+        <a href="https://pwd.1ms.my/">password-generator</a>
+        <a href="https://grafana.1ms.my/" target="_blank" rel="noopener"><span>grafana</span><span class="ribbon-ext">↗</span></a>
       </nav>
       <button class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Toggle theme">
         <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
@@ -46,6 +190,9 @@
     <div class="crumbs">
       <span>~/aaronshemtov</span><span class="sep">/</span><span>cv</span>
     </div>
+
+    <div class="hero-grid">
+      <div class="title-block">
     <h1 class="title">Aaron Shemtov</h1>
     <div class="title-tag">sre / devops engineer<span class="blink"></span></div>
 
@@ -62,7 +209,13 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
-        <span>Download CV</span>
+        <span>Download CV — short version</span>
+      </a>
+      <a class="btn btn-primary" href="/CV_Aaron_Shemtov_SRE_DevOps_full.pdf" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Download CV — full version</span>
       </a>
       <a class="btn" href="/Cover_Letter_Aaron_Shemtov.pdf" download>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -91,7 +244,48 @@
         <span>Password Gen</span>
         <span class="btn-meta">pwd.1ms.my</span>
       </a>
+      <a class="btn" href="https://grafana.1ms.my/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"></path><polyline points="7 14 11 10 14 13 20 7"></polyline>
+        </svg>
+        <span>Grafana</span>
+        <span class="btn-meta">grafana.1ms.my ↗</span>
+      </a>
     </nav>
+      </div>
+
+      <!-- Cloud experience aside — mirrors the platform-spec card on
+           infra.1ms.my visually. The four cards are ordered by the
+           hands-on depth: AWS first (longest production track record),
+           then Oracle Cloud (this very platform), then GCP and Azure
+           where exposure is broad but shorter-lived. -->
+      <aside class="cloud-card" aria-label="Cloud experience">
+        <header>
+          <span class="title-text">Cloud experience</span>
+          <span class="live-mark">live</span>
+        </header>
+
+        <section class="cloud-section">
+          <h4>AWS · EKS</h4>
+          <p>Amazon EKS, Managed Node Groups, Fargate for EKS, ECR, VPC / subnets / Security Groups, IAM, IRSA &amp; EKS Pod Identity, AWS Load Balancer Controller, ALB / NLB, Route 53, ACM, EBS &amp; EFS CSI, Secrets Manager, SSM Parameter Store, RDS, ElastiCache Redis, S3, CloudWatch, CloudTrail, KMS, Karpenter / Cluster Autoscaler, AWS Backup.</p>
+        </section>
+
+        <section class="cloud-section">
+          <h4>Oracle Cloud · OKE <span class="live-mark live-mark-sm">this platform</span></h4>
+          <p>OKE, OCIR, OCI Vault, OCI IAM with Dynamic Groups &amp; Policies, OCI Load Balancer, File Storage Service, Block Volume, Object Storage, MySQL DB System, Autonomous JSON Database, OCI Monitoring, OCI Logging, OCI DNS, OCI Certificates, OCI WAF, Cloud Guard, OCI CLI automation.</p>
+        </section>
+
+        <section class="cloud-section">
+          <h4>GCP · GKE</h4>
+          <p>GKE Standard &amp; Autopilot, Artifact Registry, Cloud Load Balancing, Cloud DNS, Cloud NAT, VPC, IAM, Workload Identity Federation for GKE, Secret Manager, Cloud KMS, Cloud SQL, Memorystore Redis, Cloud Storage, Persistent Disk &amp; Filestore CSI, Cloud Monitoring, Cloud Logging, Managed Service for Prometheus, Cloud Build, Cloud Deploy.</p>
+        </section>
+
+        <section class="cloud-section">
+          <h4>Azure · AKS</h4>
+          <p>AKS, Azure Container Registry, Azure Key Vault, Workload Identity &amp; Managed Identity, Azure Monitor, Container Insights, Log Analytics, Azure Load Balancer, Application Gateway Ingress Controller, Azure Front Door, Azure DNS, Blob &amp; Disk &amp; Files CSI, Azure Database for MySQL / PostgreSQL, Azure Cache for Redis, Defender for Cloud, Entra ID / RBAC.</p>
+        </section>
+      </aside>
+    </div>
   </section>
 
   <!-- PROFILE -->
@@ -263,8 +457,13 @@
       <span class="tag">resume hosted on the platform it describes.</span>
       <a href="https://infra.1ms.my/">see the architecture →</a>
     </div>
-    <div>
-      <a href="https://1ms.my/">1ms.my</a> · <a href="https://github.com/AaronShemtov/cv-frontend">source</a>
+    <div class="foot-nav">
+      <a href="https://1ms.my/"><span>1ms.my</span><span class="ribbon-sub">link shortener</span></a>
+      <a href="https://cv.1ms.my/">cv</a>
+      <a href="https://infra.1ms.my/">platform</a>
+      <a href="https://pwd.1ms.my/">password-generator</a>
+      <a href="https://grafana.1ms.my/" target="_blank" rel="noopener"><span>grafana</span><span class="ribbon-ext">↗</span></a>
+      <a href="https://github.com/AaronShemtov/cv-frontend" target="_blank" rel="noopener"><span>source</span><span class="ribbon-ext">↗</span></a>
     </div>
   </footer>
 
