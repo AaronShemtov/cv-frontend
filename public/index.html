@@ -149,9 +149,21 @@
     margin: 0;
   }
 
-  /* Stack hero-grid on narrow screens so the aside falls under the
-     title block instead of crowding it. */
+  /* Profile section becomes a 2-column grid: profile text on the left,
+     cloud experience aside on the right. The aside is naturally taller
+     than the profile text — that's intentional, the prose just frames
+     the technical breadth shown in the aside. */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 32px;
+    align-items: start;
+  }
+  .profile-content { min-width: 0; }
+
+  /* Stack on narrow screens so the aside falls under the profile text. */
   @media (max-width: 960px) {
+    .profile-grid { grid-template-columns: 1fr; }
     .cloud-card { margin-top: 24px; }
   }
 </style>
@@ -167,9 +179,9 @@
       <nav class="ribbon-nav">
         <a href="https://1ms.my/"><span>1ms.my</span><span class="ribbon-sub">link shortener</span></a>
         <a href="https://cv.1ms.my/" class="current">cv</a>
-        <a href="https://infra.1ms.my/">platform</a>
+        <a href="https://infra.1ms.my/">platform architecture</a>
         <a href="https://pwd.1ms.my/">password-generator</a>
-        <a href="https://grafana.1ms.my/" target="_blank" rel="noopener"><span>grafana</span><span class="ribbon-ext">↗</span></a>
+        <a href="https://grafana.1ms.my/" target="_blank" rel="noopener">grafana</a>
       </nav>
       <button class="theme-btn" id="theme-btn" aria-label="Toggle theme" title="Toggle theme">
         <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
@@ -191,8 +203,6 @@
       <span>~/aaronshemtov</span><span class="sep">/</span><span>cv</span>
     </div>
 
-    <div class="hero-grid">
-      <div class="title-block">
     <h1 class="title">Aaron Shemtov</h1>
     <div class="title-tag">sre / devops engineer<span class="blink"></span></div>
 
@@ -217,12 +227,6 @@
         </svg>
         <span>Download CV — full version</span>
       </a>
-      <a class="btn" href="/Cover_Letter_Aaron_Shemtov.pdf" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        <span>Cover Letter</span>
-      </a>
       <a class="btn" href="https://1ms.my/" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
@@ -234,7 +238,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line>
         </svg>
-        <span>Platform</span>
+        <span>Platform Architecture</span>
         <span class="btn-meta">infra.1ms.my</span>
       </a>
       <a class="btn" href="https://pwd.1ms.my/">
@@ -249,16 +253,31 @@
           <path d="M3 3v18h18"></path><polyline points="7 14 11 10 14 13 20 7"></polyline>
         </svg>
         <span>Grafana</span>
-        <span class="btn-meta">grafana.1ms.my ↗</span>
+        <span class="btn-meta">grafana.1ms.my</span>
       </a>
     </nav>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="block" id="profile">
+    <div class="sec-head">
+      <span class="sec-num">01 ·</span>
+      <h2 class="sec-title">Profile</h2>
+    </div>
+    <div class="profile-grid">
+      <div class="profile-content">
+        <div class="hero-text">
+          <p>SRE / DevOps Engineer with 13+ years of experience across production engineering, QA, release management and cloud-native delivery. Strong background in Kubernetes, GitOps, observability and production troubleshooting, combined with deep experience in quality assurance and distributed teams.</p>
+          <p>Experienced in investigating production issues, improving operational visibility, supporting releases and collaborating with engineering, product, delivery and client-facing stakeholders.</p>
+          <p>Detail-oriented, hard-working and enthusiastic. Passionate and committed to the quality of product and with excellent investigation skills. Background in release procedures, regression risk control and quality gates across backend, mobile and frontend systems.</p>
+        </div>
       </div>
 
-      <!-- Cloud experience aside — mirrors the platform-spec card on
-           infra.1ms.my visually. The four cards are ordered by the
-           hands-on depth: AWS first (longest production track record),
-           then Oracle Cloud (this very platform), then GCP and Azure
-           where exposure is broad but shorter-lived. -->
+      <!-- Cloud experience aside — same visual idiom as Platform Spec on
+           infra.1ms.my. Floats next to the Profile section; on desktop
+           the aside is taller than the profile text and bleeds into the
+           Core Skills section below, which is fine — they're related
+           content. -->
       <aside class="cloud-card" aria-label="Cloud experience">
         <header>
           <span class="title-text">Cloud experience</span>
@@ -285,19 +304,6 @@
           <p>AKS, Azure Container Registry, Azure Key Vault, Workload Identity &amp; Managed Identity, Azure Monitor, Container Insights, Log Analytics, Azure Load Balancer, Application Gateway Ingress Controller, Azure Front Door, Azure DNS, Blob &amp; Disk &amp; Files CSI, Azure Database for MySQL / PostgreSQL, Azure Cache for Redis, Defender for Cloud, Entra ID / RBAC.</p>
         </section>
       </aside>
-    </div>
-  </section>
-
-  <!-- PROFILE -->
-  <section class="block" id="profile">
-    <div class="sec-head">
-      <span class="sec-num">01 ·</span>
-      <h2 class="sec-title">Profile</h2>
-    </div>
-    <div class="hero-text" style="max-width:820px;">
-      <p>SRE / DevOps Engineer with 13+ years of experience across production engineering, QA, release management and cloud-native delivery. Strong background in Kubernetes, GitOps, observability and production troubleshooting, combined with deep experience in quality assurance and distributed teams.</p>
-      <p>Experienced in investigating production issues, improving operational visibility, supporting releases and collaborating with engineering, product, delivery and client-facing stakeholders.</p>
-      <p>Detail-oriented, hard-working and enthusiastic. Passionate and committed to the quality of product and with excellent investigation skills. Background in release procedures, regression risk control and quality gates across backend, mobile and frontend systems.</p>
     </div>
   </section>
 
@@ -460,10 +466,10 @@
     <div class="foot-nav">
       <a href="https://1ms.my/"><span>1ms.my</span><span class="ribbon-sub">link shortener</span></a>
       <a href="https://cv.1ms.my/">cv</a>
-      <a href="https://infra.1ms.my/">platform</a>
+      <a href="https://infra.1ms.my/">platform architecture</a>
       <a href="https://pwd.1ms.my/">password-generator</a>
-      <a href="https://grafana.1ms.my/" target="_blank" rel="noopener"><span>grafana</span><span class="ribbon-ext">↗</span></a>
-      <a href="https://github.com/AaronShemtov/cv-frontend" target="_blank" rel="noopener"><span>source</span><span class="ribbon-ext">↗</span></a>
+      <a href="https://grafana.1ms.my/" target="_blank" rel="noopener">grafana</a>
+      <a href="https://github.com/AaronShemtov/cv-frontend" target="_blank" rel="noopener">source</a>
     </div>
   </footer>
 
