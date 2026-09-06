@@ -127,17 +127,28 @@ li code {
 }
 .ribbon-nav {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .ribbon-nav a {
   color: var(--mute);
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 4px 8px;
+  line-height: 1.2;
+  transition: color 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
 }
 .ribbon-nav a:hover {
-  color: var(--ink);
+  color: var(--accent);
+  border-color: var(--accent);
   text-decoration: none;
 }
 .ribbon-nav a.current {
-  color: var(--ink);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 .theme-btn {
   background: transparent;
