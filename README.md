@@ -1,8 +1,8 @@
-# cv-frontend
+# aboutme-frontend
 
-**CV** —  deployed at [cv.1ms.my](https://cv.1ms.my/).
+**About Me** — deployed at [aboutme.1ms.my](https://aboutme.1ms.my/).
 
-Static site for the 1ms.my platform.
+Personal profile and downloadable CV for the 1ms.my platform.
 
 ## Stack
 
@@ -13,7 +13,7 @@ Static site for the 1ms.my platform.
 
 ## Shared style
 
-All four 1ms.my sites (1ms.my, cv.1ms.my, infra.1ms.my, pwd.1ms.my) use the same `blueprint.css` file. To keep the visual identity in sync, the file is copied into each repository's `public/` directory.
+The 1ms.my sites, including aboutme.1ms.my, infra.1ms.my and pwd.1ms.my, share the same `blueprint.css` visual language.
 
 ## Local preview
 
