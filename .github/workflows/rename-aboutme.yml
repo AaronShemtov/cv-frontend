@@ -10,36 +10,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: rename-aboutme
+        with: {ref: rename-aboutme}
       - name: Rename site identity
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          replacements = {
-            '.github/workflows/build-and-push.yml': [
-              ('cv-frontend', 'aboutme-frontend'),
-            ],
-            'README.md': [
-              ('# cv-frontend', '# aboutme-frontend'),
-              ('**CV**', '**About Me**'),
-              ('cv.1ms.my', 'aboutme.1ms.my'),
-            ],
-            'public/index.html': [
-              ('https://cv.1ms.my/', 'https://aboutme.1ms.my/'),
-              ('· cv</span>', '· about me</span>'),
-              ('>cv</a>', '>about me</a>'),
-              ('<span>cv</span>', '<span>aboutme</span>'),
-            ],
+          files={
+            '.github/workflows/build-and-push.yml': [('cv-frontend','aboutme-frontend')],
+            'README.md': [('# cv-frontend','# aboutme-frontend'),('**CV**','**About Me**'),('cv.1ms.my','aboutme.1ms.my')],
+            'public/index.html': [('https://cv.1ms.my/','https://aboutme.1ms.my/'),('· cv','· about me'),('>cv</a>','>about me</a>'),('<span>cv</span>','<span>aboutme</span>')],
           }
-          for name, pairs in replacements.items():
-              path = Path(name)
-              text = path.read_text()
-              for old, new in pairs:
-                  if old not in text:
-                      raise SystemExit(f'{old!r} not found in {name}')
-                  text = text.replace(old, new)
-              path.write_text(text)
+          for name,pairs in files.items():
+              p=Path(name); text=p.read_text()
+              for old,new in pairs: text=text.replace(old,new)
+              p.write_text(text)
+          checks={
+            '.github/workflows/build-and-push.yml':'aboutme-frontend',
+            'README.md':'aboutme.1ms.my',
+            'public/index.html':'https://aboutme.1ms.my/',
+          }
+          for name,needle in checks.items():
+              if needle not in Path(name).read_text(): raise SystemExit(f'{needle} missing from {name}')
           PY
           rm .github/workflows/rename-aboutme.yml
           git config user.name 'GitHub Actions'
