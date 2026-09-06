@@ -1,72 +1,27 @@
-name: build-and-push
-
+name: one-time-header-cleanup
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
-
+    branches: [feat/simplify-header-brand]
+permissions:
+  contents: write
 jobs:
-  build-push:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Log in to OCIR
-        uses: docker/login-action@v3
-        with:
-          registry: il-jerusalem-1.ocir.io
-          username: axiwhc5fgu9i/shemtov.aaron@gmail.com
-          password: ${{ secrets.OCIR_AUTH_TOKEN }}
-      # Three tags per build: semver for Flux, immutable short SHA and latest.
-      - name: Resolve image tags
-        id: tag
-        run: |
-          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-          echo "ver=0.0.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/arm64
-          push: true
-          tags: |
-            il-jerusalem-1.ocir.io/axiwhc5fgu9i/aboutme-frontend:${{ steps.tag.outputs.ver }}
-            il-jerusalem-1.ocir.io/axiwhc5fgu9i/aboutme-frontend:${{ steps.tag.outputs.sha }}
-            il-jerusalem-1.ocir.io/axiwhc5fgu9i/aboutme-frontend:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Summary
-        run: |
-          echo "### Image pushed :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Version tag: \`${{ steps.tag.outputs.ver }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- SHA tag: \`${{ steps.tag.outputs.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Convenience tag: \`latest\`" >> $GITHUB_STEP_SUMMARY
-      - name: Notify Telegram
-        if: success()
-        env:
-          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          IMAGE="il-jerusalem-1.ocir.io/axiwhc5fgu9i/aboutme-frontend:${{ steps.tag.outputs.ver }}"
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          TEXT="✅ *Build OK* \`aboutme-frontend\`
-          Image: \`${IMAGE}\`
-          SHA: \`${{ steps.tag.outputs.sha }}\`
-          By: ${{ github.actor }}
-          [workflow run](${RUN_URL})"
-          curl -sS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-            -d chat_id="${TG_CHAT}" \
-            -d parse_mode="Markdown" \
-            -d disable_web_page_preview="true" \
-            --data-urlencode text="${TEXT}"
+      - uses: actions/checkout@v4
+        with: {ref: feat/simplify-header-brand, fetch-depth: 0}
+      - run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          p=Path('public/index.html'); s=p.read_text()
+          r='''        <div class="ribbon-left">
+          <span class="brand">Aaron Shemtov</span>
+        </div>'''
+          s,n=re.subn(r'        <div class="ribbon-left">.*?        </div>',r,s,count=1,flags=re.S); assert n==1; p.write_text(s)
+          PY
+          rm -f .github/workflows/simplify-header-brand.yml
+          git checkout origin/main -- .github/workflows/build-and-push.yml
+          git config user.name 'GitHub Actions'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A; git commit -m 'style: simplify header brand'; git push origin HEAD:feat/simplify-header-brand
