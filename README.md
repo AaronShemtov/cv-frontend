@@ -13,7 +13,7 @@ Personal profile and downloadable CV for the 1ms.my platform.
 
 ## Shared style
 
-The 1ms.my sites, including aboutme.1ms.my, infra.1ms.my and pwd.1ms.my, share the same `blueprint.css` visual language.
+The 1ms.my sites, including aboutme.1ms.my, infra.1ms.my and secrets.1ms.my, share the same `blueprint.css` visual language.
 
 ## Local preview
 
